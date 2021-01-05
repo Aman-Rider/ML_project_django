@@ -11,9 +11,6 @@ def signin(request):
         username = request.POST['username']
         password = request.POST['password']
         user = CustomUser.objects.get(username=username)
-        print(user)
-        print(username)
-        print(password)
         if check_password(password, user.password):
             login(request,user)
             return redirect('space:home')
@@ -26,9 +23,9 @@ def signup(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            form.save()
-            print("done")
-            return HttpResponse('Done')
+            user = form.save()
+            login(request, user)
+            return redirect('space:home')
         else:
             return render(request, 'user/signup.html', {'form':form})
     else:
